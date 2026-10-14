@@ -141,6 +141,7 @@ jobs:
             if [ $IS_PRESENT -ne "0" ]; then
               DOCKER_BUILDKIT=1 docker build -t uazo/cromite-build:$VERSION-$CROMITE_SHA-$CROMITE_CONFIG_SHA --progress plain \
                 --build-arg CROMITE_SHA=$CROMITE_SHA \
+                --build-arg CROMITE_CONFIG_SHA=$CROMITE_CONFIG_SHA \
                 --build-arg VERSION=$VERSION \
                 --build-arg HTTP_PROXY="$PROXY_ADDR" \
                 --no-cache \
