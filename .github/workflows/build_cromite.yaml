@@ -118,12 +118,12 @@ jobs:
       - name: Building cromite container ${{ env.VERSION }}-${{ env.CROMITE_SHA }}
         shell: bash
         run: |
-          docker pull uazo/cromite:$VERSION-$CROMITE_SHA || true
-          IS_PRESENT=$(docker inspect --type=image uazo/cromite:$VERSION-$CROMITE_SHA > /dev/null ; echo $?)
+          docker pull uazo/cromite:$VERSION-$CROMITE_SHA-$CROMITE_CONFIG_SHA || true
+          IS_PRESENT=$(docker inspect --type=image uazo/cromite:$VERSION-$CROMITE_SHA-$CROMITE_CONFIG_SHA > /dev/null ; echo $?)
           if [ $IS_PRESENT -ne "0" ]; then
-            IS_PRESENT=$(./regctl image inspect uazo/cromite:$VERSION-$CROMITE_SHA > /dev/null ; echo $?)
+            IS_PRESENT=$(./regctl image inspect uazo/cromite:$VERSION-$CROMITE_SHA-$CROMITE_CONFIG_SHA > /dev/null ; echo $?)
             if [ $IS_PRESENT -ne "0" ]; then
-              DOCKER_BUILDKIT=1 docker build -t uazo/cromite:$VERSION-$CROMITE_SHA --progress plain \
+              DOCKER_BUILDKIT=1 docker build -t uazo/cromite:$VERSION-$CROMITE_SHA-$CROMITE_CONFIG_SHA --progress plain \
                 --build-arg CROMITE_SHA=$CROMITE_SHA \
                 --build-arg VERSION=$VERSION \
                 --build-arg HTTP_PROXY="$PROXY_ADDR" \
@@ -134,12 +134,12 @@ jobs:
       - name: Building cromite-build container ${{ env.VERSION }}-${{ env.CROMITE_SHA }}
         shell: bash
         run: |
-          docker pull uazo/cromite-build:$VERSION-$CROMITE_SHA || true
-          IS_PRESENT=$(docker inspect --type=image uazo/cromite-build:$VERSION-$CROMITE_SHA > /dev/null ; echo $?)
+          docker pull uazo/cromite-build:$VERSION-$CROMITE_SHA-$CROMITE_CONFIG_SHA || true
+          IS_PRESENT=$(docker inspect --type=image uazo/cromite-build:$VERSION-$CROMITE_SHA-$CROMITE_CONFIG_SHA > /dev/null ; echo $?)
           if [ $IS_PRESENT -ne "0" ]; then
-            IS_PRESENT=$(./regctl image inspect uazo/cromite-build:$VERSION-$CROMITE_SHA > /dev/null ; echo $?)
+            IS_PRESENT=$(./regctl image inspect uazo/cromite-build:$VERSION-$CROMITE_SHA-$CROMITE_CONFIG_SHA > /dev/null ; echo $?)
             if [ $IS_PRESENT -ne "0" ]; then
-              DOCKER_BUILDKIT=1 docker build -t uazo/cromite-build:$VERSION-$CROMITE_SHA --progress plain \
+              DOCKER_BUILDKIT=1 docker build -t uazo/cromite-build:$VERSION-$CROMITE_SHA-$CROMITE_CONFIG_SHA --progress plain \
                 --build-arg CROMITE_SHA=$CROMITE_SHA \
                 --build-arg VERSION=$VERSION \
                 --build-arg HTTP_PROXY="$PROXY_ADDR" \
@@ -151,9 +151,9 @@ jobs:
       - name: Get uazo/cromite-build from docker hub if present
         shell: bash
         run: |
-          IS_PRESENT=$(./regctl image inspect uazo/cromite-build:$VERSION-$CROMITE_SHA > /dev/null ; echo $?)
+          IS_PRESENT=$(./regctl image inspect uazo/cromite-build:$VERSION-$CROMITE_SHA-$CROMITE_CONFIG_SHA > /dev/null ; echo $?)
           if [ $IS_PRESENT -eq "0" ]; then
-            docker pull uazo/cromite-build:$VERSION-$CROMITE_SHA
+            docker pull uazo/cromite-build:$VERSION-$CROMITE_SHA-$CROMITE_CONFIG_SHA
           fi
 
       - name: Mark image to build
@@ -163,7 +163,7 @@ jobs:
           if [ $IS_PRESENT -eq "0" ]; then
             docker rmi uazo/cromite-build:build
           fi
-          docker tag uazo/cromite-build:$VERSION-$CROMITE_SHA uazo/cromite-build:build
+          docker tag uazo/cromite-build:$VERSION-$CROMITE_SHA-$CROMITE_CONFIG_SHA uazo/cromite-build:build
 
   build:
     runs-on: ${{ github.event.inputs.type }}
