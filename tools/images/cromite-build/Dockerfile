@@ -1,7 +1,8 @@
 ARG CROMITE_SHA
+ARG CROMITE_CONFIG_SHA
 ARG VERSION
 
-FROM uazo/cromite:$VERSION-$CROMITE_SHA
+FROM uazo/cromite:$VERSION-$CROMITE_SHA-$CROMITE_CONFIG_SHA
 
 ARG HTTP_PROXY
 ENV HTTP_PROXY=$HTTP_PROXY
@@ -25,4 +26,3 @@ RUN sudo chmod +x ./pre-start.sh \
     sudo chmod 775 ./goma_auth.py \
     && \
     ./pre-start.sh
-
