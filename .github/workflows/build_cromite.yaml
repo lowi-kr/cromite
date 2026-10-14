@@ -41,6 +41,7 @@ on:
 
 env:
   CROMITE_SHA: ${{ github.event.inputs.sha }}
+  CROMITE_CONFIG_SHA: ${{ github.sha }}
   REMOVEDOCKERSUPPORT: true
   USELOCALIMAGE: true
 
